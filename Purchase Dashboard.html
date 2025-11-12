@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hipl Purchase Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Font Awesome for Technical Specification Page -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #1a2035;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-size: 20px 20px;
+            font-family: 'Poppins', sans-serif;
+            color: #f0f2f5;
+            min-height: 100vh;
+        }
+
+        .content {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 4rem 0 2rem 0;
+        }
+        
+        .page-header h1 {
+            font-weight: 700;
+            font-size: 3rem;
+            color: #fff;
+        }
+        
+        .page-header p {
+            font-weight: 300;
+            color: #bdc3c7;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* --- The Animated Shadow Card --- */
+        .animated-card {
+            position: relative;
+            background: rgba(44, 62, 80, 0.6);
+            border-radius: 1rem;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        a .animated-card:hover, .animated-card:hover {
+            transform: translateY(-10px);
+        }
+
+        /* The Moving Color Shadow */
+        .animated-card::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            z-index: -1;
+            background: conic-gradient(
+                from 0deg,
+                #8e44ad, #3498db, #2ecc71, #f1c40f, #e74c3c, #8e44ad
+            );
+            transform-origin: center center;
+            transform: translate(-50%, -50%);
+            animation: spin 4s linear infinite;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        a:hover .animated-card::before, .animated-card:hover::before {
+            opacity: 1;
+        }
+        
+        /* A semi-transparent overlay to keep content readable */
+        .animated-card::after {
+            content: '';
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            right: 1px;
+            bottom: 1px;
+            background: #232d41;
+            border-radius: 1rem;
+            z-index: 0;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        /* Icon Colors */
+        .icon-1 { background-image: linear-gradient(45deg, #3498db, #9b59b6); }
+        .icon-2 { background-image: linear-gradient(45deg, #1abc9c, #2ecc71); }
+        .icon-3 { background-image: linear-gradient(45deg, #f1c40f, #e67e22); }
+        .icon-4 { background-image: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .icon-5 { background-image: linear-gradient(45deg, #9b59b6, #8e44ad); }
+        .icon-6 { background-image: linear-gradient(45deg, #2c3e50, #34495e); }
+        .icon-7 { background-image: linear-gradient(45deg, #7f8c8d, #95a5a6); }
+        .icon-8 { background-image: linear-gradient(45deg, #16a085, #1abc9c); }
+        .icon-pending { background-image: linear-gradient(45deg, #f39c12, #d35400); }
+        
+        .card-title {
+            font-weight: 600;
+            color: #fff;
+            font-size: 1.25rem;
+        }
+        
+        .back-btn {
+            margin-bottom: 2rem;
+            display: inline-flex;
+            align-items: center;
+            font-weight: 500;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .back-btn:hover {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        /* Animations */
+        @keyframes spin {
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Technical Specification Page Styles */
+        .team-cards, .followup-cards, .card-section {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .team-card, .followup-card, .main-card {
+            width: 250px;
+            height: 200px;
+            border-radius: 15px;
+            background: rgba(44, 62, 80, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-card::before, .followup-card::before, .main-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            z-index: -1;
+            background: linear-gradient(45deg, #ff0066, #00ccff, #ff0066, #00ccff);
+            background-size: 400%;
+            border-radius: 16px;
+            animation: glowing 20s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .team-card:hover::before, .followup-card:hover::before, .main-card:hover::before {
+            opacity: 1;
+        }
+
+        .team-card:hover, .followup-card:hover, .main-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .team-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .team-card h3, .followup-card h3, .main-card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .team-card p, .followup-card p, .main-card p {
+            font-size: 1rem;
+            opacity: 0.8;
+            text-align: center;
+            padding: 0 15px;
+            color: #f0f2f5;
+        }
+
+        @keyframes glowing {
+            0% { background-position: 0 0; }
+            50% { background-position: 400% 0; }
+            100% { background-position: 0 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Home Screen (Main Menu) -->
+        <div id="home" class="content">
+            <div class="page-header">
+                <h1>Hipl Purchase Dashboard</h1>
+                <p>Select a module to continue. Hover over cards to see the effect.</p>
+            </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                <div class="col"><div class="animated-card h-100" onclick="showContent('delegation-score-page')"><div class="card-content"><i class="bi bi-people-fill card-icon icon-1"></i><h5 class="card-title">Task Delegation</h5></div></div></div>
+                <div class="col"><div class="animated-card h-100" onclick="showContent('electric-dashboard-page')"><div class="card-content"><i class="bi bi-lightning-charge-fill card-icon icon-2"></i><h5 class="card-title">Electric Dashboard</h5></div></div></div>
+                <div class="col"><div class="animated-card h-100" onclick="showContent('score-card-page')"><div class="card-content"><i class="bi bi-clipboard-data-fill card-icon icon-3"></i><h5 class="card-title">Score Card</h5></div></div></div>
+                <div class="col"><div class="animated-card h-100" onclick="showContent('purchase-fms-page')"><div class="card-content"><i class="bi bi-bag-check-fill card-icon icon-4"></i><h5 class="card-title">Purchase FMS</h5></div></div></div>
+                <div class="col"><div class="animated-card h-100" onclick="showContent('travel-desk-page')"><div class="card-content"><i class="bi bi-airplane-fill card-icon icon-5"></i><h5 class="card-title">Travel Desk</h5></div></div></div>
+                <div class="col"><div class="animated-card h-100" onclick="showContent('help-desk-page')"><div class="card-content"><i class="bi bi-headset card-icon icon-6"></i><h5 class="card-title">Help Desk</h5></div></div></div>
+                <div class="col"><div class="animated-card h-100" onclick="showContent('check-list-page')"><div class="card-content"><i class="bi bi-list-check card-icon icon-7"></i><h5 class="card-title">Check List</h5></div></div></div>
+                <div class="col"><div class="animated-card h-100" onclick="showContent('technical-spec-page')"><div class="card-content"><i class="bi bi-tools card-icon icon-8"></i><h5 class="card-title">PC-FOLLOWUP</h5></div></div></div>
+            </div>
+        </div>
+
+        <!-- Delegation Score Sub-Menu Page -->
+        <div id="delegation-score-page" class="content">
+            <div class="page-header">
+                <button class="btn back-btn" onclick="goBack()"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                <h1>Delegation Score</h1>
+                <p>Select a delegation category to view.</p>
+            </div>
+            <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+                <div class="col">
+                    <a href="https://script.google.com/macros/s/AKfycbxZ3Chg6b8JnSddvGWf_Uko7RtFWqcUFgBBeOq4t3Fap3oIs123dZ4pOK4RK6bteefhVQ/exec" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                        <div class="animated-card h-100">
+                            <div class="card-content">
+                                <i class="bi bi-cart-check-fill card-icon icon-1"></i>
+                                <h5 class="card-title">Delegation Score</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://script.google.com/a/macros/hemrajgroup.co.in/s/AKfycbw6dPgXE17RVFY6_7HWTTfF3ZgsCHyHwgbxixjYxLZ9GPvKcD3HrO0NLc1nznT_jCP_Ow/exec" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                        <div class="animated-card h-100">
+                            <div class="card-content">
+                                <i class="bi bi-person-video3 card-icon icon-2"></i>
+                                <h5 class="card-title">Delegation Dashboard</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://script.google.com/macros/s/AKfycbwBalknkfgF01E7mVnsq4PKJdCsXCwcHWOmwVSp4HV5og4ruIxp9CeiIpUHqm8DjMvx/exec" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                        <div class="animated-card h-100">
+                            <div class="card-content">
+                                <i class="bi bi-person-badge-fill card-icon icon-3"></i>
+                                <h5 class="card-title">Add Doer</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Electric Dashboard Sub-Menu Page -->
+        <div id="electric-dashboard-page" class="content">
+            <div class="page-header">
+                <button class="btn back-btn" onclick="goBack()"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                <h1>Electric Dashboard</h1>
+                <p>Select a dashboard to view.</p>
+            </div>
+            <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+                <div class="col">
+                    <a href="https://lookerstudio.google.com/embed/reporting/45d67aa9-1f8c-49d5-87d4-311e72e0e5fc/page/qlD" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content">
+                                <i class="bi bi-ev-station-fill card-icon icon-1"></i>
+                                <h5 class="card-title">Electric & Solar Dashboard</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Score Card Sub-Menu Page -->
+        <div id="score-card-page" class="content">
+            <div class="page-header">
+                <button class="btn back-btn" onclick="goBack()"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                <h1>Score Card</h1>
+                <p>Select a report or score card to view.</p>
+            </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                <div class="col">
+                    <a href="https://lookerstudio.google.com/embed/reporting/866eb674-71c5-4068-b0d8-f38644a21b50/page/qlD" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content"><i class="bi bi-person-vcard-fill card-icon icon-1"></i><h5 class="card-title">PROLOY Score Card</h5></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://lookerstudio.google.com/embed/reporting/2725534d-9f56-46d0-b8d6-230722c36eed/page/qlD" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content"><i class="bi bi-person-vcard-fill card-icon icon-2"></i><h5 class="card-title">SAYANTA Score Card</h5></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://lookerstudio.google.com/embed/reporting/ffa92171-fe97-475b-9fdb-bb5fb3f08f1d/page/qlD" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content"><i class="bi bi-person-vcard-fill card-icon icon-3"></i><h5 class="card-title">AMIT Score Card</h5></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://lookerstudio.google.com/embed/reporting/c20d1164-ed58-4b4f-99c5-38c9b3299861/page/qlD" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content"><i class="bi bi-person-vcard-fill card-icon icon-4"></i><h5 class="card-title">ARPITA Score Card</h5></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://lookerstudio.google.com/embed/reporting/4fc57a78-8192-44f7-be9a-4c80a24703c9/page/qlD" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content"><i class="bi bi-person-vcard-fill card-icon icon-5"></i><h5 class="card-title">RUPAK Score Card</h5></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://lookerstudio.google.com/embed/reporting/efd55005-d087-4e27-8ae0-bd736da75a47/page/1xZU" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content"><i class="bi bi-qr-code-scan card-icon icon-6"></i><h5 class="card-title">DEBASISH SCAN REPORT</h5></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <div class="animated-card h-100">
+                        <div class="card-content"><i class="bi bi-hourglass-split card-icon icon-pending"></i><h5 class="card-title">Executive 1 Pending</h5></div>
+                    </div>
+                </div>
+                <div class="col">
+                    <a href="https://lookerstudio.google.com/embed/reporting/858ce663-7021-4ff0-b460-ad47352b7b4b/page/C38JF" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content"><i class="bi bi-hourglass-split card-icon icon-pending"></i><h5 class="card-title">Executive 2 Pending</h5></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://lookerstudio.google.com/embed/reporting/7145d2a9-232f-4b8f-bbe4-82a33a1604e4/page/C38JF" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content"><i class="bi bi-hourglass-split card-icon icon-pending"></i><h5 class="card-title">Executive 3 Pending</h5></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://lookerstudio.google.com/embed/reporting/1ae326bd-7a29-47da-bc80-c668d736511b/page/p_oau7qay6pd" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content"><i class="bi bi-files card-icon icon-8"></i><h5 class="card-title">PC-FOLLOWUP</h5></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Purchase FMS Sub-Menu Page -->
+        <div id="purchase-fms-page" class="content">
+            <div class="page-header">
+                <button class="btn back-btn" onclick="goBack()"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                <h1>Purchase FMS</h1>
+                <p>Select a module to continue.</p>
+            </div>
+            <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+                <div class="col">
+                    <a href="https://sites.google.com/hemrajgroup.co.in/purchase-fms-all/home" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content">
+                                <i class="bi bi-box-seam-fill card-icon icon-4"></i>
+                                <h5 class="card-title">PURCHASE FMS-ALL</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Travel Desk Sub-Menu Page -->
+        <div id="travel-desk-page" class="content">
+            <div class="page-header">
+                <button class="btn back-btn" onclick="goBack()"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                <h1>Travel Desk</h1>
+                <p>Select an option to proceed.</p>
+            </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
+                <div class="col">
+                    <a href="https://script.google.com/macros/s/AKfycbxZXcRaBj3SbO7rUBmGKrLcaTYSFFRGu62YNy70miZlPlWXFSV86JIM1WSm9C8wtkI/exec" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content"><i class="bi bi-app-indicator card-icon icon-1"></i><h5 class="card-title">Travel Desk App</h5></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://50tmusutaozsz6wlstca7q.on.drv.tw/TFMS/OnlyLink/Index2.html" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content"><i class="bi bi-link-45deg card-icon icon-2"></i><h5 class="card-title">Nigeria Link</h5></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://50tmusutaozsz6wlstca7q.on.drv.tw/TFMS/Index.html" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content"><i class="bi bi-file-earmark-text-fill card-icon icon-3"></i><h5 class="card-title">All Forms Link</h5></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://lookerstudio.google.com/embed/reporting/2177817f-d379-4532-8cf8-35ac4ca41880/page/Gg3" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content"><i class="bi bi-grid-1x2-fill card-icon icon-4"></i><h5 class="card-title">DASHBOARD</h5></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://lookerstudio.google.com/embed/reporting/fb4e840f-19fe-425f-9f4b-ead1b9a242f9/page/VgD" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content"><i class="bi bi-trophy-fill card-icon icon-5"></i><h5 class="card-title">SCORE</h5></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Desk Sub-Menu Page -->
+        <div id="help-desk-page" class="content">
+            <div class="page-header">
+                <button class="btn back-btn" onclick="goBack()"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                <h1>Help Desk</h1>
+                <p>Access analytics, notifications, and the main dashboard.</p>
+            </div>
+            <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+                <div class="col">
+                    <a href="https://script.google.com/macros/s/AKfycbybSsAEYJbJkWQ6rumFqYUo0kajA3vvs9VzAiG0_aOk2BFMdKsP9LXkhsYbi7E1DZfr/exec" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content">
+                                <i class="bi bi-bar-chart-line-fill card-icon icon-1"></i>
+                                <h5 class="card-title">Help Ticket App</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://script.google.com/macros/s/AKfycbwhTAc_kaEA4ctIGVpbqvNkKeOBDFvOSpp4-EaOSkdmEcr36BQohQUPC23PLmPTc5be/exec" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content">
+                                <i class="bi bi-bell-fill card-icon icon-2"></i>
+                                <h5 class="card-title">HELP DESK NOTIFICATION</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://script.google.com/macros/s/AKfycbyViPUIV4rS9Z7Y4w_NhD8cshZhi-QzdGSkuEdbKUw87_6low6aQ5MBN5Aw4G8wdDsG/exec" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content">
+                                <i class="bi bi-grid-1x2-fill card-icon icon-3"></i>
+                                <h5 class="card-title">Pending Dashboard</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Check List Sub-Menu Page -->
+        <div id="check-list-page" class="content">
+            <div class="page-header">
+                <button class="btn back-btn" onclick="goBack()"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                <h1>Check List</h1>
+                <p>Select a category to continue.</p>
+            </div>
+            <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+                <div class="col">
+                    <a href="https://script.google.com/a/macros/hemrajgroup.co.in/s/AKfycbyJqRUIv3Koi-cYoVvAOgOf6WR6-0Be7s_Nd3lTmPaY2Q8bL8sx_DnD8W9NcUj9ydVa/exec" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="animated-card h-100">
+                            <div class="card-content">
+                                <i class="bi bi-speedometer2 card-icon icon-1"></i>
+                                <h5 class="card-title">Check List Dashboard</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Specification Sub-Menu Page -->
+        <div id="technical-spec-page" class="content">
+            <div class="page-header">
+                <button class="btn back-btn" onclick="goBack()"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                <h1>PC Follow Up</h1>
+                <p>Comprehensive Dashboard for Follow-up Management</p>
+            </div>
+            <div class="card-section">
+                <div class="main-card" onclick="showContent('pc-followup-page')">
+                    <div class="card-content">
+                        <i class="fas fa-desktop card-icon icon-1"></i>
+                        <h5 class="card-title">PC-FOLLOWUP-APP</h5>
+                        <p>Access the follow-up application</p>
+                    </div>
+                </div>
+                <div class="main-card" onclick="showContent('score-card-sub-page')">
+                    <div class="card-content">
+                        <i class="fas fa-chart-line card-icon icon-2"></i>
+                        <h5 class="card-title">SCORE CARD</h5>
+                        <p>View performance metrics and scores</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       <!-- PC Follow-up App Page -->
+<div id="pc-followup-page" class="content">
+    <div class="page-header">
+        <button class="btn back-btn" onclick="goBack()"><i class="bi bi-arrow-left me-2"></i> Back</button>
+        <h1>PC-FOLLOWUP-APP</h1>
+        <p>Select a team member to view their follow-ups</p>
+    </div>
+    <div class="team-cards">
+        <div class="team-card" onclick="showContent('arpita-page')">
+            <img src="https://ui-avatars.com/api/?name=Arpita&background=random" class="team-img" alt="Arpita">
+            <h3>Arpita</h3>
+        </div>
+        <div class="team-card" onclick="showContent('praloy-page')">
+            <img src="https://ui-avatars.com/api/?name=Praloy&background=random" class="team-img" alt="Praloy">
+            <h3>PRALOY</h3>
+        </div>
+        <div class="team-card" onclick="showContent('amit-page')">
+            <img src="https://ui-avatars.com/api/?name=Amit&background=random" class="team-img" alt="Amit">
+            <h3>AMIT</h3>
+        </div>
+        <div class="team-card" onclick="showContent('sayanta-page')">
+            <img src="https://ui-avatars.com/api/?name=Sayanta&background=random" class="team-img" alt="Sayanta">
+            <h3>SAYANTA</h3>
+        </div>
+    </div>
+</div>
+
+<!-- Arpita Page -->
+<div id="arpita-page" class="content">
+    <div class="page-header">
+        <button class="btn back-btn" onclick="goBack()"><i class="bi bi-arrow-left me-2"></i> Back</button>
+        <h1>ARPITA FOLLOW-UPS</h1>
+        <p>Select a follow-up type to manage</p>
+    </div>
+    <div class="followup-cards">
+        <div class="followup-card" onclick="window.open('https://script.google.com/macros/s/AKfycbxqo_l1rvUj2vN3Q_el8mgZ6r7R8a8CusqgHuih9Ejme8hGfADXl0j2Y9QYHGM9n8XPXQ/exec', '_blank')">
+            <h3>FOLLOWUP 1</h3>
+        </div>
+        <div class="followup-card" onclick="window.open('https://script.google.com/macros/s/AKfycbyO9-5dMj02THYTSy7ma9EBaBt90q92FG995KI1ol0XWy_oS71NOtn1C5eq73wK_QUrXA/exec', '_blank')">
+            <h3>FOLLOWUP 2</h3>
+        </div>
+        <div class="followup-card" onclick="window.open('https://script.google.com/macros/s/AKfycbwmGLz-Ld-jLumncBxYhEXR7owPF7ZnBj_V4aSa04Gm9-Nj_FgWK5rQULSIzn8NxYm9qw/exec', '_blank')">
+            <h3>FOLLOWUP 3</h3>
+        </div>
+    </div>
+</div>
+
+<!-- Praloy Page -->
+<div id="praloy-page" class="content">
+    <div class="page-header">
+        <button class="btn back-btn" onclick="goBack()"><i class="bi bi-arrow-left me-2"></i> Back</button>
+        <h1>PRALOY FOLLOW-UPS</h1>
+        <p>Select a follow-up type to manage</p>
+    </div>
+    <div class="followup-cards">
+        <div class="followup-card" onclick="window.open('https://script.google.com/macros/s/AKfycbxHcjWtYUVWEhn6FtzWQQje_9gSIcJHlR6CIguaKAr1ckx5Dq2GZrn9uH2pC1Mk73Aq/exec', '_blank')">
+            <h3>FOLLOWUP 1</h3>
+        </div>
+        <div class="followup-card" onclick="window.open('https://script.google.com/macros/s/AKfycbwWtsrCK_p2A4u_ePmRB7QrTSc5KLgzLb2t4i2TCcHUsfWG9w9EauDQCXuzMSboCo4k/exec', '_blank')">
+            <h3>FOLLOWUP 2</h3>
+        </div>
+        <div class="followup-card" onclick="window.open('https://script.google.com/macros/s/AKfycbxl3CAOygBwSetVlKwP-C72Vp18lx6ESvIEyTMIM8er-ach-KMNZRM_h9Cp3gSimUpO/exec', '_blank')">
+            <h3>FOLLOWUP 3</h3>
+        </div>
+    </div>
+</div>
+
+<!-- Amit Page -->
+<div id="amit-page" class="content">
+    <div class="page-header">
+        <button class="btn back-btn" onclick="goBack()"><i class="bi bi-arrow-left me-2"></i> Back</button>
+        <h1>AMIT FOLLOW-UPS</h1>
+        <p>Select a follow-up type to manage</p>
+    </div>
+    <div class="followup-cards">
+        <div class="followup-card" onclick="window.open('https://script.google.com/macros/s/AKfycbzoh1PwlY5bHYkgiQfFRYi3InYqrS3ATq35HdGClEfzf4UUMKgb7AOvFmy46BXuY8YI/exec', '_blank')">
+            <h3>FOLLOWUP 1</h3>
+        </div>
+        <div class="followup-card" onclick="window.open('https://script.google.com/macros/s/AKfycbwqCm-dDYdQUxi--u2TdjqQYK2cqBSMxdUzvGL1DeU6ImDAQWFQ3VAaY-NCaE6i7ltMjA/exec', '_blank')">
+            <h3>FOLLOWUP 2</h3>
+        </div>
+        <div class="followup-card" onclick="window.open('https://script.google.com/macros/s/AKfycbzNnKoUsr1evMZaaUcHlw911Bryy1f4t0pYmkWrbQUa7_VoC2pDyelz_EkHpPwmGQFwGw/exec', '_blank')">
+            <h3>FOLLOWUP 3</h3>
+        </div>
+    </div>
+</div>
+
+<!-- Sayanta Page -->
+<div id="sayanta-page" class="content">
+    <div class="page-header">
+        <button class="btn back-btn" onclick="goBack()"><i class="bi bi-arrow-left me-2"></i> Back</button>
+        <h1>SAYANTA FOLLOW-UPS</h1>
+        <p>Select a follow-up type to manage</p>
+    </div>
+    <div class="followup-cards">
+        <div class="followup-card" onclick="window.open('https://script.google.com/macros/s/AKfycbxL0GqsuxkYNolVZJwnEiTYW8dP--NGB_IB8j2HniERAAkvO5EXJVCEtI13hgHIAxunIg/exec', '_blank')">
+            <h3>FOLLOWUP 1</h3>
+        </div>
+        <div class="followup-card" onclick="window.open('https://script.google.com/macros/s/AKfycbyhJlbzRbQShuAs_mifpwFAZvzj1ZGZKPVsjcyyrI3t_u7OQ0MQHFuJLrgfNG5h6HCITQ/exec', '_blank')">
+            <h3>FOLLOWUP 2</h3>
+        </div>
+        <div class="followup-card" onclick="window.open('https://script.google.com/macros/s/AKfycbypgUpb95jgvB1hAL6vHZrHCzo-Tn4gTqIRMgVkT-leOzKtUdy-Wau1XSm7gGWdAZFu/exec', '_blank')">
+            <h3>FOLLOWUP 3</h3>
+        </div>
+    </div>
+</div>
+
+        <!-- Score Card Sub-Page (SCORE CARD) -->
+        <div id="score-card-sub-page" class="content">
+            <div class="page-header">
+                <button class="btn back-btn" onclick="goBack()"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                <h1>SCORE CARD</h1>
+                <p>Performance metrics and analytics</p>
+            </div>
+            <div class="card-section">
+                <div class="main-card">
+                    <div class="card-content">
+                        <i class="fas fa-user-check card-icon icon-1"></i>
+                        <h5 class="card-title">Completion Rate</h5>
+                        <p>92% Follow-ups Completed</p>
+                    </div>
+                </div>
+                <div class="main-card">
+                    <div class="card-content">
+                        <i class="fas fa-clock card-icon icon-2"></i>
+                        <h5 class="card-title">Average Time</h5>
+                        <p>2.4 Days per Follow-up</p>
+                    </div>
+                </div>
+                <div class="main-card">
+                    <div class="card-content">
+                        <i class="fas fa-star card-icon icon-3"></i>
+                        <h5 class="card-title">Satisfaction</h5>
+                        <p>4.8/5 Customer Rating</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Array to store the history of visited pages for the back button
+        let pageHistory = ['home'];
+
+        function showContent(pageId) {
+            // Hide all content sections
+            document.querySelectorAll('.content').forEach(page => {
+                page.style.display = 'none';
+            });
+
+            // Show the requested section
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.style.display = 'block';
+                // Add the new page to history if it's not the same as the last one
+                if (pageHistory[pageHistory.length - 1] !== pageId) {
+                    pageHistory.push(pageId);
+                }
+            }
+        }
+
+        function goBack() {
+            // If there's more than one page in history, remove the current one
+            if (pageHistory.length > 1) {
+                pageHistory.pop();
+            }
+            // Get the previous page ID
+            const previousPageId = pageHistory[pageHistory.length - 1];
+            showContent(previousPageId);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showContent('home');
+        });
+    </script>
+</body>
+</html>
